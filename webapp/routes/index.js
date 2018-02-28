@@ -1,19 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var sqlite = require('../lib/sqlite')
+// var sqlite = require('../lib/sqlite')
 var fakeDb = require('../lib/fake')
 
-var sqlAllAsync = function (str) {
-	return new Promise(function (resolve, reject) {
-		sqlite.all(str, (err, rows) => {
-			if (err) {
-				return reject(err)
-			} else {
-				return resolve(rows)
-			}
-		})
-	})
-}
+// var sqlAllAsync = function (str) {
+// 	return new Promise(function (resolve, reject) {
+// 		sqlite.all(str, (err, rows) => {
+// 			if (err) {
+// 				return reject(err)
+// 			} else {
+// 				return resolve(rows)
+// 			}
+// 		})
+// 	})
+// }
 
 router.get('/', function (req, res, next) {
 	if (req.session.logined) {
@@ -47,8 +47,8 @@ router.post('/params', (req, res, next) => {
 
 router.post('/login', async (req, res, next) => {
 	const { user, pwd } = req.body;
-	let results = await sqlAllAsync(`select count(*) from USERS where user='${user}' and pwd='${pwd}'`)
-	var count = results[0]['count(*)'];
+	// let results = await sqlAllAsync(`select count(*) from USERS where user='${user}' and pwd='${pwd}'`)
+	// var count = results[0]['count(*)'];
 	if (user === fakeDb.struct.user && pwd === fakeDb.struct.pwd) {
 		req.session.logined = true;
 		return res.redirect('/');
