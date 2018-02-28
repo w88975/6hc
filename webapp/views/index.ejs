@@ -1,0 +1,78 @@
+<% include header%>
+<% include layout_admin_header%>
+<nav aria-label="breadcrumb">
+<ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">参数设置</li>
+</ol>
+</nav>
+
+<form class="col-md-8" action="/params" method="POST">
+<div class="form-group row">
+    <label for="url" class="col-sm-2 col-form-label">* 跳转地址</label>
+    <div class="col-sm-10">
+    <input type="text" name="url" class="form-control" id="url" value="<%=url%>">
+    </div>
+</div>
+<div class="form-group row">
+    <label for="imrurl" class="col-sm-2 col-form-label">* 显示图片</label>
+    <div class="col-sm-10">
+        <input type="hidden" name="imgurl" id="imgurl" value=""/>
+        <img style="max-width: 200px;" onerror="imgError()" id="preview" src="/d1" alt="默认图" class="img-thumbnail"/>
+        <button style="margin-left: 20px;" class="btn btn-sm btn-outline-secondary" id="img-up-btn" type="button">上传图片</button>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="jscode" class="col-sm-2 col-form-label">* JS代码</label>
+    <div class="col-sm-10">
+        <textarea style="min-height: 300px;" class="form-control" name="jscode" aria-label="With textarea"><%=js%></textarea>
+    </div>
+</div>
+
+<div class="form-group row">
+        <label for="" class="col-sm-2 col-form-label">操作</label>
+        <div class="col-sm-10">
+        <input type="submit" class="btn btn-sm btn-outline-secondary" value="保存">
+        </div>
+    </div>
+</form>
+
+<% include layout_admin_footer%>
+<script>
+    $('#img-up-btn').on('click',function(){
+        var fileInput = document.createElement('input')
+        fileInput.type = "file"
+        fileInput.name = "file"
+        $(fileInput).on('change',function(e){
+            var name = e.currentTarget.files[0].name;
+            // 验证文件后缀名
+            var extName = name.substring(name.lastIndexOf('.')+1).toUpperCase();
+            if (extName == 'JPEG' || extName =='JPG' || extName =='PNG' || extName =='GIF') {
+                var fd = new FormData();
+                fd.append('file',e.target.files[0])
+                $.ajax({
+                    url: '/upload',
+                    type: 'POST',
+                    cache: false,
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                }).done(function(res) {
+                    $('#preview').attr('src',`/d1?${Math.random()}`)
+                    $('#imgurl').attr('src',`/d1?${Math.random()}`)
+                }).fail(function(res) {
+
+                }); 
+            } else {
+                return alert('请选择有效的图片格式!')
+            }
+        })
+        fileInput.click()
+    })
+
+    function imgError() {
+        console.log('error')
+        event.target.src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1519818074245&di=8b30c9f0f00364fba6f55fa05e7a71a1&imgtype=0&src=http%3A%2F%2Fwww.cddatu.com%2Fuc%2Ftemplate%2Flightsail_mwt1%2Fextend%2Fimg%2Fnoimg.jpg"
+    }
+</script>
+<% include footer%>
