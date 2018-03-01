@@ -18,7 +18,7 @@ var fakeDb = require('../lib/fake')
 router.get('/', function (req, res, next) {
 	if (req.session.logined) {
 		var config = fakeDb.struct.config
-		res.render('index', { url: config.url, js: config.js });
+		res.render('index', { url: config.url, js: config.js,width: config.width });
 	} else {
 		console.log('未登录')
 		res.redirect('/login');
@@ -26,10 +26,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/js', function (req, res, next) {
-	res.setHeader('Content-type','application/x-javascript')
+	res.setHeader('Content-type', 'application/x-javascript')
 	var str = fakeDb.struct.config.js
-	str = str.replace(/\$url\$/g,fakeDb.struct.config.url)
-	str = str.replace(/\$img\$/g,fakeDb.struct.config.img)
+	str = str.replace(/\$url\$/g, fakeDb.struct.config.url)
+	str = str.replace(/\$img\$/g, fakeDb.struct.config.img)
+	str = str.replace(/\$width\$/g, fakeDb.struct.config.width)
 	res.send(str);
 });
 
@@ -38,9 +39,10 @@ router.get('/login', (req, res, next) => {
 })
 
 router.post('/params', (req, res, next) => {
-	const { url, jscode } = req.body
+	const { url, jscode, width } = req.body
 	fakeDb.struct.config.url = url
 	fakeDb.struct.config.js = jscode
+	fakeDb.struct.config.width = width
 	fakeDb.save()
 	res.redirect('/')
 })
