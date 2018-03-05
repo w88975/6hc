@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 // var sqlite = require('../lib/sqlite')
 var fakeDb = require('../lib/fake')
 
@@ -18,12 +18,12 @@ var fakeDb = require('../lib/fake')
 router.get('/', function (req, res, next) {
 	if (req.session.logined) {
 		var config = fakeDb.struct.config
-		res.render('index', { url: config.url, js: config.js,width: config.width });
+		res.render('index', { url: config.url, js: config.js,width: config.width })
 	} else {
 		console.log('未登录')
-		res.redirect('/login');
+		res.redirect('/login')
 	}
-});
+})
 
 router.get('/js', function (req, res, next) {
 	res.setHeader('Content-type', 'application/x-javascript')
@@ -31,11 +31,11 @@ router.get('/js', function (req, res, next) {
 	str = str.replace(/\$url\$/g, fakeDb.struct.config.url)
 	str = str.replace(/\$img\$/g, fakeDb.struct.config.img)
 	str = str.replace(/\$width\$/g, fakeDb.struct.config.width)
-	res.send(str);
-});
+	res.send(str)
+})
 
 router.get('/login', (req, res, next) => {
-	res.render('login', { msg: '' });
+	res.render('login', { msg: '' })
 })
 
 router.post('/params', (req, res, next) => {
@@ -48,15 +48,15 @@ router.post('/params', (req, res, next) => {
 })
 
 router.post('/login', async (req, res, next) => {
-	const { user, pwd } = req.body;
+	const { user, pwd } = req.body
 	// let results = await sqlAllAsync(`select count(*) from USERS where user='${user}' and pwd='${pwd}'`)
-	// var count = results[0]['count(*)'];
+	// var count = results[0]['count(*)']
 	if (user === fakeDb.struct.user && pwd === fakeDb.struct.pwd) {
-		req.session.logined = true;
-		return res.redirect('/');
+		req.session.logined = true
+		return res.redirect('/')
 	} else {
-		req.session.logined = false;
-		return res.render('login', { msg: '登录失败,请检查账户密码是否正确!' });
+		req.session.logined = false
+		return res.render('login', { msg: '登录失败,请检查账户密码是否正确!' })
 	}
 	// if (count > 0) {
 
@@ -65,4 +65,4 @@ router.post('/login', async (req, res, next) => {
 	// }
 })
 
-module.exports = router;
+module.exports = router
